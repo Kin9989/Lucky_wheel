@@ -5,7 +5,32 @@ const saveButton = document.getElementById("saveToDatabase");
 
 let items = [];
 
-// Hàm tạo danh sách item
+// Hàm lấy dữ liệu từ MongoDB và hiển thị
+function loadItemsFromDatabase() {
+    fetch('https://server-api-luckyapp-v2.onrender.com/getItems')
+        .then(response => response.json())
+        .then(data => {
+            items = data.items || [];
+            itemList.innerHTML = ""; // Xóa danh sách hiện tại
+
+            // Hiển thị các item từ cơ sở dữ liệu
+            items.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("item");
+                itemDiv.innerHTML = `
+                    <label>ID: ${item.id}</label>
+                    <input type="text" value="${item.value}" id="value_${item.id}" class="input" />
+                    <input type="number" value="${item.count}" id="count_${item.id}" min="0" class="input" />
+                `;
+                itemList.appendChild(itemDiv);
+            });
+        })
+        .catch(error => {
+            console.error('Lỗi khi tải dữ liệu từ MongoDB:', error);
+        });
+}
+
+// Hàm tạo danh sách item mới
 generateItemsButton.addEventListener("click", () => {
     const count = parseInt(itemCountInput.value);
 
@@ -34,7 +59,6 @@ generateItemsButton.addEventListener("click", () => {
 
 // Hàm lưu vào MongoDB
 saveButton.addEventListener("click", () => {
-    // Cập nhật danh sách items với giá trị từ các ô input
     items = items.map((item) => {
         const valueInput = document.getElementById(`value_${item.id}`);
         const countInput = document.getElementById(`count_${item.id}`);
@@ -46,7 +70,6 @@ saveButton.addEventListener("click", () => {
         };
     });
 
-    // Gửi dữ liệu tới backend (API)
     fetch('https://server-api-luckyapp-v2.onrender.com/saveItems', {
         method: 'POST',
         headers: {
@@ -56,7 +79,6 @@ saveButton.addEventListener("click", () => {
     })
         .then(response => response.json())
         .then(data => {
-            // Console log khi lưu thành công
             console.log('Dữ liệu đã được lưu vào MongoDB:', data.message);
             alert(data.message);
         })
@@ -64,3 +86,6 @@ saveButton.addEventListener("click", () => {
             console.error('Lỗi khi gửi dữ liệu:', error);
         });
 });
+
+// Gọi hàm loadItemsFromDatabase khi tải trang
+document.addEventListener("DOMContentLoaded", loadItemsFromDatabase);
