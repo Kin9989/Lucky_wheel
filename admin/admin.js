@@ -1,0 +1,66 @@
+const itemList = document.getElementById("itemList");
+const itemCountInput = document.getElementById("itemCount");
+const generateItemsButton = document.getElementById("generateItems");
+const saveButton = document.getElementById("saveToDatabase");
+
+let items = [];
+
+// Hàm tạo danh sách item
+generateItemsButton.addEventListener("click", () => {
+    const count = parseInt(itemCountInput.value);
+
+    if (isNaN(count) || count <= 0) {
+        alert("Vui lòng nhập số lượng item hợp lệ!");
+        return;
+    }
+
+    // Reset danh sách items
+    items = [];
+    itemList.innerHTML = "";
+
+    for (let i = 1; i <= count; i++) {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("item");
+        itemDiv.innerHTML = `
+            <label>ID: ${i}</label>
+            <input type="text" placeholder="Nhập giá trị item" id="value_${i}" class="input" />
+            <input type="number" placeholder="Count" id="count_${i}" min="0" value="0" class="input" />
+        `;
+        itemList.appendChild(itemDiv);
+
+        items.push({ id: i, value: "", count: 0 });
+    }
+});
+
+// Hàm lưu vào MongoDB
+saveButton.addEventListener("click", () => {
+    // Cập nhật danh sách items với giá trị từ các ô input
+    items = items.map((item) => {
+        const valueInput = document.getElementById(`value_${item.id}`);
+        const countInput = document.getElementById(`count_${item.id}`);
+
+        return {
+            id: item.id,
+            value: valueInput.value || "",
+            count: parseInt(countInput.value) || 0,
+        };
+    });
+
+    // Gửi dữ liệu tới backend (API)
+    fetch('https://server-api-luckyapp-v2.onrender.com/saveItems', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items: items }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Console log khi lưu thành công
+            console.log('Dữ liệu đã được lưu vào MongoDB:', data.message);
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Lỗi khi gửi dữ liệu:', error);
+        });
+});
