@@ -54,7 +54,7 @@ fetch('https://server-api-luckyapp-v2.onrender.com/getItems')  // Đảm bảo b
             const totalSpins = randomOrder.length;
 
             // Mảng các màu sắc ngẫu nhiên
-            const colors = ["yellow", "red", "blue", "green", "orange", "purple"];
+            const colors = [ "red", "blue", "green", "orange", "purple"];
 
             // Tạo đối tượng âm thanh
             const randomSound = new Audio('sound/random.mp3');
