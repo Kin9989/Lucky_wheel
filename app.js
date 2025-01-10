@@ -54,14 +54,14 @@ fetch('https://server-api-luckyapp-v2.onrender.com/getItems')  // Đảm bảo b
             const totalSpins = randomOrder.length;
 
             // Mảng các màu sắc ngẫu nhiên
-            const colors = [ "red", "blue", "green", "orange", "purple"];
+            const colors = ["red", "blue", "green", "orange", "purple"];
 
             // Tạo đối tượng âm thanh
             const randomSound = new Audio('sound/random.mp3');
             const winnerSound = new Audio('sound/winner.mp3');
             window.spinWheel = function () {
                 console.log("Bắt đầu quay");
-
+                document.getElementById("spinCount").textContent = ` ${spinCount}/${totalSpins}`;
                 // Nếu đang quay thì không cho quay nữa
                 if (isSpinning) {
                     console.log("Đang quay...");
@@ -113,7 +113,7 @@ fetch('https://server-api-luckyapp-v2.onrender.com/getItems')  // Đảm bảo b
                     lights[currentIndex].style.backgroundColor = randomColor;
 
                     // Kiểm tra nếu dừng đúng vị trí
-                    if (rounds >= 4 && lights[currentIndex].id === targetId) {
+                    if (rounds >= 5 && lights[currentIndex].id === targetId) {
                         clearInterval(interval);
                         spinCount++;
 
@@ -122,7 +122,8 @@ fetch('https://server-api-luckyapp-v2.onrender.com/getItems')  // Đảm bảo b
                             // Phát âm thanh thông báo người trúng giải
                             winnerSound.play();
                             showPopup(`Chúc mừng! Trúng "${targetItem.value}"`);
-                        }, 1000); // 1s delay
+                            document.getElementById("spinCount").textContent = `${spinCount}/${totalSpins}`;
+                        }, 200); // 1s delay
 
                         // Sau 500ms nữa, log kết quả vào bảng xếp hạng
                         setTimeout(() => {
