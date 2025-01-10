@@ -167,9 +167,9 @@ body {
     background-color: #45a049;
 }
 
-/* scroll result : thanh scroll kết quả  đang mặc định 400  */
+/* scroll result : thanh scroll kết quả  đang mặc định 300  */
 #logContainer {
-  max-height: 300px; /* Giới hạn chiều cao */
+  max-height: 200px; /* Giới hạn chiều cao */
   overflow-y: auto; /* Hiển thị thanh cuộn dọc khi nội dung vượt quá */
   border: 1px solid #ccc; /* Đường viền */
   padding: 10px; /* Khoảng cách bên trong */
